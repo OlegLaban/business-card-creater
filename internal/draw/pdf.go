@@ -50,8 +50,7 @@ func New(settings PdfSettings) *PdfDraw {
 
 func (pd *PdfDraw) Draw() {
     // Создаём PDF-документ
-    
-	pd.pdf.SetMargins(0, 0, 0)
+	pd.pdf.SetMargins(pd.settings.PageSettings.MarginX, pd.settings.PageSettings.MarginY, pd.settings.PageSettings.MarginX)
 
     // Добавляем новую страницу
     pd.pdf.AddPage()
@@ -80,16 +79,21 @@ func (pd *PdfDraw) Draw() {
 func (pd *PdfDraw) drawSide(imgSettings *ImageSettings) {
     // Список изображений с их позициями и размерами
     images := make([]Image, 0)
-    var y float64 = pd.settings.PageSettings.OffsetY
+    var y float64 = pd.settings.PageSettings.MarginY
 	var count float64 = 0
     wd, hd, _ := pd.pdf.PageSize(0)
 
 	for {
 		var columnCount float64 = 1
 		for i := imgSettings.Width; i <= float64(wd); i = i + imgSettings.Width + pd.settings.PageSettings.OffsetX {
+            offsetX := imgSettings.Width * (columnCount - 1) +  pd.settings.PageSettings.MarginX
+            if columnCount > 1 {
+                offsetX +=  pd.settings.PageSettings.OffsetX*columnCount
+            } 
+
             image := Image{
                 imgSettings.Filepath,
-                pd.settings.PageSettings.OffsetX*columnCount + imgSettings.Width * (columnCount - 1),
+                offsetX,
                 y,
                 imgSettings.Width,
                 0,
@@ -99,8 +103,8 @@ func (pd *PdfDraw) drawSide(imgSettings *ImageSettings) {
 		}
         
 		count++
-
-		y = imgSettings.Width * count + pd.settings.PageSettings.OffsetX * (count + 1)
+        
+		y = imgSettings.Width * count + pd.settings.PageSettings.OffsetY * (count + 1) + pd.settings.PageSettings.MarginY
 		
 		if (y + imgSettings.Width + pd.settings.PageSettings.OffsetY)  > hd {
 			break

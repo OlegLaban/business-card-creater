@@ -12,10 +12,10 @@ import (
 func main() {
     orientation := "P"
     var uintStr string 
-    pageMarginX := float64(3)
-    pageMarginY := float64(3)
-    pageOffsetX := float64(3)
-    pageOffsetY := float64(3)
+    pageMarginX := float64(2)
+    pageMarginY := float64(2)
+    pageOffsetX := float64(1)
+    pageOffsetY := float64(1)
     pageFormat := "A4"
     var fontDir string
     var firstImagePath string
