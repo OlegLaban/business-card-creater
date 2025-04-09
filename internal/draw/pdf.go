@@ -84,13 +84,8 @@ func (pd *PdfDraw) drawSide(imgSettings *ImageSettings) {
     wd, hd, _ := pd.pdf.PageSize(0)
 
 	for {
-		var columnCount float64 = 1
-		for i := imgSettings.Width; i <= float64(wd); i = i + imgSettings.Width + pd.settings.PageSettings.OffsetX {
-            offsetX := imgSettings.Width * (columnCount - 1) +  pd.settings.PageSettings.MarginX
-            if columnCount > 1 {
-                offsetX +=  pd.settings.PageSettings.OffsetX*columnCount
-            } 
-
+        offsetX := pd.settings.PageSettings.MarginX
+		for {
             image := Image{
                 imgSettings.Filepath,
                 offsetX,
@@ -99,14 +94,19 @@ func (pd *PdfDraw) drawSide(imgSettings *ImageSettings) {
                 0,
             }
 			images = append(images, image)
-			columnCount++
+
+            offsetX += pd.settings.PageSettings.OffsetX + imgSettings.Width
+
+            if (offsetX + pd.settings.PageSettings.OffsetX + imgSettings.Width) >= wd {
+                break
+            }
 		}
         
 		count++
         
-		y = imgSettings.Width * count + pd.settings.PageSettings.OffsetY * (count + 1) + pd.settings.PageSettings.MarginY
-		
-		if (y + imgSettings.Width + pd.settings.PageSettings.OffsetY)  > hd {
+		y += pd.settings.PageSettings.OffsetY + imgSettings.Width
+
+		if (y + pd.settings.PageSettings.OffsetY + imgSettings.Width) > hd {
 			break
 		}
 
