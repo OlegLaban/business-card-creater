@@ -107,5 +107,4 @@ func main() {
 	rootCmd.Flags().IntVarP(&borderWidth, "border", "b", 0, "Border width")
 
 	rootCmd.Execute()
-	//./main -f "images/image-Photoroom.png" -w 40 -s "images/qr_m.png" -p 40 -b 1 -j 5 -k 5 -z 5 -l 5
 }
